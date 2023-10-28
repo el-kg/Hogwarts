@@ -1,72 +1,58 @@
 package ru.hogwarts.school.service;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.hogwarts.school.exception.FacultyAlreadyExistException;
 import ru.hogwarts.school.exception.FacultyNotFoundException;
 import ru.hogwarts.school.exception.StudentNotFoundException;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.repository.FacultyRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class FacultyServiceImplTest {
+    FacultyRepository facultyRepository;
+    public FacultyServiceImplTest(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
+    }
 
-    FacultyService facultyService = new FacultyServiceImpl();
     Faculty faculty1 = new Faculty(1, "Griffindor", "Yellow");
 
     @Test
     void create_shouldCreateAndReturnFaculty() {
-        assertEquals(faculty1, facultyService.create(faculty1));
+        assertEquals(faculty1, facultyRepository.save(faculty1));
     }
 
-    @Test
-    void create_shouldThrowFacultyAlreadyExistExceptionWhenFacultyAreAlreadyInMap() {
-        Faculty expectedFaculty = new Faculty(1, "Griffindor", "Yellow");
-        facultyService.create(expectedFaculty);
-        assertThrows(FacultyAlreadyExistException.class, () -> facultyService.create(faculty1));
-    }
 
     @Test
     void read_shouldReadAndReturnFaculty() {
-        facultyService.create(faculty1);
-        assertEquals(faculty1, facultyService.read(1L));
+        facultyRepository.save(faculty1);
+        assertEquals(faculty1, facultyRepository.findById(1L).get());
     }
 
     @Test
-    void read_shouldThrowFacultyNotFoundException() {
-        assertThrows(FacultyNotFoundException.class, () -> facultyService.read(1L));
-    }
-
-    @Test
-    void update_shouldReturnUpdateFacultyWhenFacultyAreInMap() {
-        facultyService.create(faculty1);
+    void update_shouldReturnUpdateFacultyWhenFacultyAreInRepository() {
+        facultyRepository.save(faculty1);
         Faculty expectedFaculty = new Faculty(1, "Griffindor", "Yellow");
-        assertEquals(expectedFaculty, facultyService.update(expectedFaculty));
+        assertEquals(expectedFaculty, facultyRepository.save(expectedFaculty));
+    }
+
+
+    @Test
+    void delete_shouldDeleteWhenFacultyAreInRepository() {
+        facultyRepository.save(faculty1);
+        facultyRepository.deleteById(1L);
+
     }
 
     @Test
-    void update_shouldThrowFacultyNotFoundExceptionWhenFacultyAreNotInMap() {
-        assertThrows(FacultyNotFoundException.class, () -> facultyService.update(faculty1));
-    }
-
-    @Test
-    void delete_shouldThrowFacultyNotFoundExceptionWhenFacultyAreNotInMap() {
-        assertThrows(FacultyNotFoundException.class, () -> facultyService.delete(1L));
-    }
-
-    @Test
-    void delete_shouldDeleteAndReturnFacultyWhenStudentAreInMap() {
-        facultyService.create(faculty1);
-        assertEquals(faculty1, facultyService.delete(1L));
-    }
-
-    @Test
-    void readByAge_shouldReturnCollectionWhenFacultysWithThisColorAreInMap() {
+    void readByAge_shouldReturnCollectionWhenFacultiesWithThisColorAreInRepository() {
         Faculty faculty2 = new Faculty(1, "Slizerin", "Green");
         Faculty faculty3 = new Faculty(1, "Kogtevran", "Green");
 
-        facultyService.create(faculty1);
-        facultyService.create(faculty2);
-        facultyService.create(faculty3);
-        assertEquals(2, facultyService.readByColor("Green").size());
+        facultyRepository.save(faculty1);
+        facultyRepository.save(faculty2);
+        facultyRepository.save(faculty3);
+        assertEquals(2, facultyRepository.findByColor("Green").size());
     }
 }
