@@ -24,7 +24,7 @@ public class FacultyController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Faculty> read(@PathVariable long id) {
+    public Faculty read(@PathVariable long id) {
         return facultyService.read(id);
     }
 
@@ -34,9 +34,8 @@ public class FacultyController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable long id) {
-         facultyService.delete(id);
-         return ResponseEntity.ok().build();
+    public Faculty delete(@PathVariable long id) {
+         return facultyService.delete(id);
     }
 
     @GetMapping

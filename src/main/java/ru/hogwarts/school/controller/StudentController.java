@@ -23,7 +23,7 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Student> read(@PathVariable long id) {
+    public Student read(@PathVariable long id) {
         return studentService.read(id);
     }
 
@@ -33,9 +33,8 @@ public class StudentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable long id) {
-         studentService.delete(id);
-         return ResponseEntity.ok().build();
+    public Student delete(@PathVariable long id) {
+         return studentService.delete(id);
     }
 
     @GetMapping

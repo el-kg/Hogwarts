@@ -1,11 +1,12 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.exception.StudentAlreadyExistException;
+import ru.hogwarts.school.exception.StudentNotFoundException;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentsRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -17,22 +18,26 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student create(Student student) {
+        studentsRepository.findById(student.getId()).orElseThrow(StudentAlreadyExistException::new);
         return studentsRepository.save(student);
     }
 
     @Override
-    public Optional<Student> read(long id) {
-        return studentsRepository.findById(id);
+    public Student read(long id) {
+        return studentsRepository.findById(id).orElseThrow(StudentNotFoundException::new);
     }
 
     @Override
     public Student update(Student student) {
-       return  studentsRepository.save(student);
+        studentsRepository.findById(student.getId()).orElseThrow(StudentNotFoundException::new);
+        return  studentsRepository.save(student);
     }
 
     @Override
-    public void delete(long id) {
+    public Student delete(long id) {
+        Student s = studentsRepository.findById(id).orElseThrow(StudentNotFoundException::new);
         studentsRepository.deleteById(id);
+        return s;
     }
 
     @Override

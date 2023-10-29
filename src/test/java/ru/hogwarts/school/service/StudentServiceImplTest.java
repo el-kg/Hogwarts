@@ -1,6 +1,10 @@
 package ru.hogwarts.school.service;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.hogwarts.school.exception.StudentAlreadyExistException;
 import ru.hogwarts.school.exception.StudentNotFoundException;
@@ -13,11 +17,9 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 class StudentServiceImplTest {
-    public StudentServiceImplTest(StudentsRepository studentsRepository) {
-        this.studentsRepository = studentsRepository;
-    }
+ public StudentServiceImplTest (StudentsRepository studentsRepository){this.studentsRepository = studentsRepository;}
 
-    @Autowired
+
     StudentsRepository studentsRepository;
     Student potter = new Student(1, "Harry", 13);
 
@@ -26,12 +28,22 @@ class StudentServiceImplTest {
         Student expectedStudent = new Student(1, "Harry", 13);
                 assertEquals(expectedStudent, studentsRepository.save(potter));
     }
+    @Test
+    void create_shouldThrowStudentAlreadyAddedException() {
+        studentsRepository.save(potter);
+        assertThrows(StudentAlreadyExistException.class,()-> studentsRepository.save(potter));
+    }
 
 
     @Test
     void read_shouldReadAndReturnStudent() {
         studentsRepository.save(potter);
         assertEquals(potter, studentsRepository.findById(1L).get());
+    }
+    @Test
+    void read_shouldThrowStudentNotFoundException() {
+        studentsRepository.save(potter);
+        assertThrows(StudentNotFoundException.class,()-> studentsRepository.findById(1L).get());
     }
 
     @Test
