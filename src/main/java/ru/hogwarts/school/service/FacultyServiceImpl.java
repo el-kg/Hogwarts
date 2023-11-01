@@ -20,7 +20,8 @@ public class FacultyServiceImpl implements FacultyService {
     @Override
     public Faculty create(Faculty faculty) {
         facultyRepository.findById(faculty.getId()).orElseThrow(FacultyNotFoundException::new);
-        return facultyRepository.save(faculty);
+        facultyRepository.save(faculty);
+        return faculty;
     }
 
     @Override

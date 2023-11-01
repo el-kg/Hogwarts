@@ -20,7 +20,7 @@ public class Student {
         this.name = name;
         this.age = age;
     }
-    Student(){}
+    public Student(){}
 
     @Override
     public boolean equals(Object o) {

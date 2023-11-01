@@ -1,6 +1,10 @@
 package ru.hogwarts.school.service;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.hogwarts.school.exception.FacultyAlreadyExistException;
 import ru.hogwarts.school.exception.FacultyNotFoundException;
@@ -8,33 +12,54 @@ import ru.hogwarts.school.exception.StudentNotFoundException;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.repository.FacultyRepository;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 class FacultyServiceImplTest {
+    @Mock
     FacultyRepository facultyRepository;
-    public FacultyServiceImplTest(FacultyRepository facultyRepository) {
-        this.facultyRepository = facultyRepository;
-    }
+    @InjectMocks
+    FacultyServiceImpl facultyService;
 
     Faculty faculty1 = new Faculty(1, "Griffindor", "Yellow");
 
     @Test
     void create_shouldCreateAndReturnFaculty() {
-        assertEquals(faculty1, facultyRepository.save(faculty1));
+        Faculty faculty1 = new Faculty(1, "Griffindor", "Yellow");
+        when(facultyRepository.findById(faculty1.getId())).thenReturn(Optional.of((faculty1)));
+        assertEquals(faculty1,facultyService.create(faculty1));
+    }
+    @Test
+    void create_shouldThrowFacultyAlreadyAddedException() {
+        when(facultyRepository.findById(faculty1.getId())).thenThrow(new FacultyAlreadyExistException());
+        assertThrows(FacultyAlreadyExistException.class,()->facultyService.create(faculty1));
     }
 
 
     @Test
     void read_shouldReadAndReturnFaculty() {
-        facultyRepository.save(faculty1);
-        assertEquals(faculty1, facultyRepository.findById(1L).get());
+        when(facultyRepository.findById(1L)).thenReturn(Optional.of(faculty1));
+        assertEquals(faculty1, facultyService.read(1L));
+    }
+    @Test
+    void read_shouldThrowFacultyNotFoundException(){
+        when(facultyRepository.findById(1L)).thenThrow(new FacultyNotFoundException());
+        assertThrows(FacultyNotFoundException.class,()->facultyService.read(1L));
     }
 
     @Test
     void update_shouldReturnUpdateFacultyWhenFacultyAreInRepository() {
-        facultyRepository.save(faculty1);
-        Faculty expectedFaculty = new Faculty(1, "Griffindor", "Yellow");
-        assertEquals(expectedFaculty, facultyRepository.save(expectedFaculty));
+        when(facultyRepository.findById(faculty1.getId())).thenReturn(Optional.of(faculty1));
+        assertEquals(faculty1, facultyService.update(faculty1));
+    }
+    @Test
+    void update_shouldThrowFacultyNotFoundException(){
+        when(facultyRepository.findById(faculty1.getId())).thenThrow(new FacultyNotFoundException());
+        assertThrows(FacultyNotFoundException.class,()->facultyService.update(faculty1));
     }
 
 
@@ -49,10 +74,8 @@ class FacultyServiceImplTest {
     void readByAge_shouldReturnCollectionWhenFacultiesWithThisColorAreInRepository() {
         Faculty faculty2 = new Faculty(1, "Slizerin", "Green");
         Faculty faculty3 = new Faculty(1, "Kogtevran", "Green");
-
-        facultyRepository.save(faculty1);
-        facultyRepository.save(faculty2);
-        facultyRepository.save(faculty3);
+        List<Faculty> facultyList= List.of(faculty2,faculty3);
+        when(facultyRepository.findByColor("Green")).thenReturn(facultyList);
         assertEquals(2, facultyRepository.findByColor("Green").size());
     }
 }

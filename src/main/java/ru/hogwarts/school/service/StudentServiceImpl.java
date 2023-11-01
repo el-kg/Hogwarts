@@ -19,7 +19,8 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student create(Student student) {
         studentsRepository.findById(student.getId()).orElseThrow(StudentAlreadyExistException::new);
-        return studentsRepository.save(student);
+        studentsRepository.save(student);
+        return student;
     }
 
     @Override
@@ -30,7 +31,8 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student update(Student student) {
         studentsRepository.findById(student.getId()).orElseThrow(StudentNotFoundException::new);
-        return  studentsRepository.save(student);
+        studentsRepository.save(student);
+        return student;
     }
 
     @Override
