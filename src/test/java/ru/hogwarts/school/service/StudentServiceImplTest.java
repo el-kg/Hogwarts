@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
     }
     @Test
     void create_shouldThrowStudentAlreadyAddedException() {
-        when(studentsRepository.findById(1L)).thenThrow(new StudentAlreadyExistException());
+        when(studentsRepository.findById(1L)).thenReturn(Optional.empty());
         assertThrows(StudentAlreadyExistException.class,()-> studentService.create(potter));
     }
 
@@ -48,7 +48,7 @@ import static org.mockito.Mockito.when;
     }
     @Test
     void read_shouldThrowStudentNotFoundException() {
-        when(studentsRepository.findById(1L)).thenThrow(new StudentNotFoundException());
+        when(studentsRepository.findById(1L)).thenReturn(Optional.empty());
         assertThrows(StudentNotFoundException.class,()-> studentService.read(1L));
     }
 
@@ -59,15 +59,14 @@ import static org.mockito.Mockito.when;
     }
     @Test
     void update_shouldThrowStudentNotFoundException() {
-        when(studentsRepository.findById(potter.getId())).thenThrow(new StudentNotFoundException());
+        when(studentsRepository.findById(potter.getId())).thenReturn(Optional.empty());
         assertThrows(StudentNotFoundException.class,()-> studentService.update(potter));
     }
 
     @Test
     void delete_shouldReturnDeleteWhenStudentAreInRepository() {
-      //  when(studentsRepository.findById((potter.getId())).thenReturn(potter));
-       // when(studentsRepository.deleteById(1L)).thenReturn(potter));
-        assertEquals(potter,studentService.delete(1L));
+        when(studentsRepository.findById(potter.getId())).thenReturn(of(potter));
+        assertEquals(of(potter),studentService.delete(1L));
     }
 
     @Test

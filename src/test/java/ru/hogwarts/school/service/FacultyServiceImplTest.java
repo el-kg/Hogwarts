@@ -34,8 +34,8 @@ class FacultyServiceImplTest {
         assertEquals(faculty1,facultyService.create(faculty1));
     }
     @Test
-    void create_shouldThrowFacultyAlreadyAddedException() {
-        when(facultyRepository.findById(faculty1.getId())).thenThrow(new FacultyAlreadyExistException());
+    void create_shouldThrowFacultyAlreadyExistException() {
+        when(facultyRepository.findById(faculty1.getId())).thenReturn(Optional.empty());
         assertThrows(FacultyAlreadyExistException.class,()->facultyService.create(faculty1));
     }
 
@@ -47,26 +47,27 @@ class FacultyServiceImplTest {
     }
     @Test
     void read_shouldThrowFacultyNotFoundException(){
-        when(facultyRepository.findById(1L)).thenThrow(new FacultyNotFoundException());
+        when(facultyRepository.findById(1L)).thenReturn(Optional.empty());
         assertThrows(FacultyNotFoundException.class,()->facultyService.read(1L));
     }
 
     @Test
     void update_shouldReturnUpdateFacultyWhenFacultyAreInRepository() {
         when(facultyRepository.findById(faculty1.getId())).thenReturn(Optional.of(faculty1));
+        when(facultyRepository.save(faculty1)).thenReturn(faculty1);
         assertEquals(faculty1, facultyService.update(faculty1));
     }
     @Test
     void update_shouldThrowFacultyNotFoundException(){
-        when(facultyRepository.findById(faculty1.getId())).thenThrow(new FacultyNotFoundException());
+        when(facultyRepository.findById(faculty1.getId())).thenReturn(Optional.empty());
         assertThrows(FacultyNotFoundException.class,()->facultyService.update(faculty1));
     }
 
 
     @Test
     void delete_shouldDeleteWhenFacultyAreInRepository() {
-        facultyRepository.save(faculty1);
-        facultyRepository.deleteById(1L);
+        when(facultyRepository.findById(faculty1.getId())).thenReturn(Optional.of(faculty1));
+        assertEquals(faculty1, facultyService.delete(1L));
 
     }
 

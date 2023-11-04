@@ -7,6 +7,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentsRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -19,8 +20,8 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student create(Student student) {
         studentsRepository.findById(student.getId()).orElseThrow(StudentAlreadyExistException::new);
-        studentsRepository.save(student);
-        return student;
+        return studentsRepository.save(student);
+        //return student;
     }
 
     @Override
@@ -36,10 +37,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student delete(long id) {
-        Student s = studentsRepository.findById(id).orElseThrow(StudentNotFoundException::new);
+    public Optional<Student> delete(long id) {
+        studentsRepository.findById(id).orElseThrow(StudentNotFoundException::new);
         studentsRepository.deleteById(id);
-        return s;
+        return studentsRepository.findById(id);
     }
 
     @Override
