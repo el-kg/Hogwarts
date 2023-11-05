@@ -7,6 +7,7 @@ import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.repository.FacultyRepository;
 
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -46,5 +47,8 @@ public class FacultyServiceImpl implements FacultyService {
     public List<Faculty> findByColor(String color) {
         return facultyRepository.findByColor(color);
     }
-}
+    @Override
+    public Collection<Faculty> findByColorOrName(String name,String color){
+        return facultyRepository.findByNameIgnoreCaseOrColorIgnoreCase(name,color);}
+    }
 

@@ -35,12 +35,18 @@ public class FacultyController {
 
     @DeleteMapping("/{id}")
     public Faculty delete(@PathVariable long id) {
-         return facultyService.delete(id);
+        return facultyService.delete(id);
     }
 
     @GetMapping
-    public Collection<Faculty> readByColor(String color) {
+    public Collection<Faculty> readByColor(@RequestParam String color) {
         return facultyService.findByColor(color);
+    }
+
+    @GetMapping("/name")
+    public Collection<Faculty> readByColorOrName(@RequestParam String name,
+                                                 @RequestParam String color) {
+        return facultyService.findByColorOrName(name, color);
     }
 }
 
