@@ -40,16 +40,16 @@ public class StudentController {
     }
 
     @GetMapping
-    public Collection<Student> readByAge(@RequestBody @RequestParam int age) {
+    public Collection<Student> readByAge( @RequestParam int age) {
         return studentService.findByAge(age);
     }
     @GetMapping("/age")
-    public Collection<Student> readByAgeBetween(@RequestBody @RequestParam int minAge,@RequestParam int maxAge){
+    public Collection<Student> readByAgeBetween( @RequestParam int minAge,@RequestParam int maxAge){
         return studentService.findByAgeBetween(minAge,maxAge);
     }
     @GetMapping("/faculty/{id}")
     public Faculty readStudentFaculty(@PathVariable long id){ return studentService.readStudentFaculty(id);}
     @GetMapping("/students/{id}")
-    public Collection<Student> readAllByFacultyId(@RequestBody @PathVariable long id){return studentService.readByFacultyId(id);}
+    public Collection<Student> readAllByFacultyId( @PathVariable long id){return studentService.readByFacultyId(id);}
 
 }
