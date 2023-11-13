@@ -25,7 +25,8 @@ class AvatarServiceImplTest {
 
     @Test
     void uploadAvatar_shouldSaveAvatarToDataBase() throws IOException {
-        MultipartFile file = new MockMultipartFile("13.pdf", "13.pdf", "application/pdf", new byte[]{});
+        MultipartFile file = new MockMultipartFile("13.pdf", "13.pdf", "application/pdf"
+                , new byte[]{});
         when(studentService.read(student.getId())).thenReturn(student);
         when(avatarRepository.findByStudent_id(student.getId())).thenReturn(Optional.empty());
 
@@ -38,23 +39,27 @@ class AvatarServiceImplTest {
     }
 
     @Test
-    void readFromDB_shouldReadAvatar()  {
-        Avatar avatar= new Avatar();
+    void readFromDB_shouldReadAvatar() {
+        Avatar avatar = new Avatar();
         when(avatarRepository.findById(1L)).thenReturn(Optional.of(avatar));
-        assertEquals(avatar,avatarService.readFromDB(1L));
+        assertEquals(avatar, avatarService.readFromDB(1L));
     }
 
     @Test
     void readFromDB_shouldThrowAvatarNotFoundException() {
         when(avatarRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(AvatarNotFoundException.class,()->avatarService.readFromDB(1L));
+        assertThrows(AvatarNotFoundException.class, () -> avatarService.readFromDB(1L));
     }
 
     @Test
-    void readFromFile_shouldReadAvatar()throws IOException {
-        Avatar avatar= new Avatar();
+    void readFromFile_shouldReadAvatar() throws IOException {
+        Avatar avatar = new Avatar();
+        avatar.setData(new byte[]{});
+        avatar.setFilePath("/1L.pdf");
+        avatar.setFileSize(11);
+        avatar.setStudent(student);
+        avatar.setMediaType(".pdf");
         when(avatarRepository.findById(1L)).thenReturn(Optional.of(avatar));
-        File file=avatarService.readFromFile(1L);
-        assertEquals(file,avatarService.readFromFile(1L));
+        assertEquals(new File(avatar.getFilePath()), avatarService.readFromFile(1L));
     }
 }
