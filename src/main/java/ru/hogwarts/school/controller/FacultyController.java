@@ -38,8 +38,8 @@ public class FacultyController {
          return facultyService.delete(id);
     }
 
-    @GetMapping
-    public Collection<Faculty> readByColor(String color) {
+    @GetMapping("/{color}")
+    public Collection<Faculty> readByColor(@PathVariable String color) {
         return facultyService.findByColor(color);
     }
 }
