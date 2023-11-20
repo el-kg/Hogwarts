@@ -34,12 +34,11 @@ public class StudentController {
 
     @DeleteMapping("/{id}")
     public Student delete(@PathVariable long id) {
-        studentService.delete(id);
-        return studentService.read(id);
+        return studentService.delete(id);
     }
 
-    @GetMapping("/{age}")
-    public Collection<Student> readByAge(@PathVariable int age) {
+    @GetMapping
+    public Collection<Student> readByAge(@RequestParam int age) {
         return studentService.findByAge(age);
     }
 }

@@ -2,8 +2,7 @@ package ru.hogwarts.school.service;
 
 import ru.hogwarts.school.model.Student;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.Collection;
 
 public interface StudentService {
 
@@ -13,7 +12,7 @@ public interface StudentService {
 
     Student update(Student student);
 
-    Optional<Student> delete(long id);
+    Student delete(long id);
 
-    List<Student> findByAge(int age);
+    Collection<Student> findByAge(int age);
 }

@@ -77,7 +77,7 @@ public class StudentControllerRestTemplateTest {
         Student saveStudent1 = studentsRepository.save(student1);
 
         ResponseEntity<List<Student>> result = testRestTemplate.exchange(
-                pathUrl + "/" + student.getAge(), HttpMethod.GET, null,
+                pathUrl + "?age=" + student.getAge(), HttpMethod.GET, null,
                 new ParameterizedTypeReference<>() {
                 });
 

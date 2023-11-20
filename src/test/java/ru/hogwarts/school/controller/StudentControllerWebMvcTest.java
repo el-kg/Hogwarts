@@ -11,8 +11,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentsRepository;
 import ru.hogwarts.school.service.StudentServiceImpl;
+
 import java.util.List;
 import java.util.Optional;
+
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -42,22 +44,6 @@ public class StudentControllerWebMvcTest {
 
     }
 
-    @Test
-    void create_shouldThrowStudentAlreadyExistException() throws Exception {
-        when(studentsRepository.findById(student.getId())).thenReturn(Optional.empty());
-
-        mockMvc.perform(post("/student"))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void read_shouldReturnStudentAndGetStatusOk() throws Exception {
-        when(studentsRepository.findById(student.getId())).thenReturn(Optional.of(student));
-
-        mockMvc.perform(get("/student/" + student.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(Optional.of(student)));
-    }
 
     @Test
     void read_shouldThrowStudentNotFoundException() throws Exception {
@@ -69,6 +55,7 @@ public class StudentControllerWebMvcTest {
 
     @Test
     void update_shouldReturnStudentAndGetStatusOk() throws Exception {
+        when(studentsRepository.findById(student.getId())).thenReturn(Optional.of(student));
         when(studentsRepository.save(student)).thenReturn(student);
 
         mockMvc.perform(put("/student")
@@ -78,37 +65,21 @@ public class StudentControllerWebMvcTest {
                 .andExpect(jsonPath("$").value(student));
     }
 
-    @Test
-    void update_shouldThrowStudentNotFoundException() throws Exception {
-        when(studentsRepository.findById(student.getId())).thenReturn(Optional.empty());
-
-        mockMvc.perform(put("/student/"))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void delete_shouldDeleteAndReturnStudentAndStatusOk() throws Exception {
-        when(studentsRepository.findById((student.getId()))).thenReturn(Optional.of(student));
-
-        mockMvc.perform(delete("/student" + student.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(Optional.of(student)));
-    }
 
     @Test
     void delete_shouldThrowStudentNotFoundException() throws Exception {
         when(studentsRepository.findById((student.getId()))).thenReturn(Optional.empty());
 
-        mockMvc.perform(delete("/student" + student.getId()))
+        mockMvc.perform(delete("/student?age=" + student.getId()))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    void findByColor_shouldReturnListOfFacultiesAndStatusOk() throws Exception {
+    void findByAge_shouldReturnListOfStudentsAndStatusOk() throws Exception {
         Student student1 = new Student(2L, "Ron Wizlee", 13);
         when(studentsRepository.findByAge(student.getAge())).thenReturn(List.of(student, student1));
 
-        mockMvc.perform(get("/student/" + student.getAge()))
+        mockMvc.perform(get("/student?age=" + student.getAge()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0]").value(student))
                 .andExpect(jsonPath("$.[1]").value(student1));

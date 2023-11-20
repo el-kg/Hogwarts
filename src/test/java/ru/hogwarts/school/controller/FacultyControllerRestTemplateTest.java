@@ -27,12 +27,12 @@ public class FacultyControllerRestTemplateTest {
     FacultyRepository facultyRepository;
     @LocalServerPort
     int port;
-    Faculty faculty = new Faculty(1L, "Griffendor", "Green&White");
+    Faculty faculty = new Faculty(1L, "Griffendor", "Green");
     String pathUrl;
 
     @BeforeEach
     void beforeEach() {
-        pathUrl = "http://localhost:" + port + "/student";
+        pathUrl = "http://localhost:" + port + "/faculty";
         facultyRepository.deleteAll();
     }
 
@@ -46,8 +46,8 @@ public class FacultyControllerRestTemplateTest {
 
     @Test
     void read_shouldThrowFacultyIsNotFound() {
-        ResponseEntity<Faculty> result = testRestTemplate.getForEntity(
-                pathUrl + "/" + faculty.getId(), Faculty.class);
+        ResponseEntity<String> result = testRestTemplate.getForEntity(
+                pathUrl + "/" + faculty.getId(), String.class);
 
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
     }
@@ -74,12 +74,12 @@ public class FacultyControllerRestTemplateTest {
     @Test
     void readByColor_shouldReturnFacultiesCollections() {
         Faculty saveFaculty = facultyRepository.save(faculty);
-        Faculty faculty1 = new Faculty(2L, "Kogtewran", "Green&White");
+        Faculty faculty1 = new Faculty(2L, "Kogtewran", "Green");
         Faculty saveFaculty1 = facultyRepository.save(faculty1);
         ;
 
         ResponseEntity<List<Faculty>> result = testRestTemplate.exchange(
-                pathUrl + "/" + faculty.getColor(), HttpMethod.GET, null,
+                pathUrl + "?color=" + faculty.getColor(), HttpMethod.GET, null,
                 new ParameterizedTypeReference<>() {
                 });
 
