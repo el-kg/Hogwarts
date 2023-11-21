@@ -42,6 +42,12 @@ public class FacultyController {
     public Collection<Faculty> readByColor(@RequestParam String color) {
         return facultyService.findByColor(color);
     }
+
+    @GetMapping("/name")
+    public Collection<Faculty> readByColorOrName(@RequestParam String name,
+                                                 @RequestParam String color) {
+        return facultyService.findByColorOrName(name, color);
+    }
 }
 
 

@@ -9,6 +9,7 @@ import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.hogwarts.school.exception.StudentAlreadyExistException;
 import ru.hogwarts.school.exception.StudentNotFoundException;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentsRepository;
 
@@ -70,11 +71,35 @@ import static org.mockito.Mockito.when;
     }
 
     @Test
-    void readByAge_shouldReturnCollectionWhenStudentsWithThisAgeAreInMap() {
+    void readByAge_shouldReturnCollectionWhenStudentsWithThisAgeAreInRepository() {
         Student graindger = new Student(1, "Germiona", 13);
         Student wizle = new Student(1, "Ron", 12);
         List<Student> expectedList= List.of(potter,graindger);
         when(studentsRepository.findByAge(13)).thenReturn(expectedList);
         assertEquals(2, studentService.findByAge(13).size());
+    }
+    @Test
+    void findByAgeBetween_shouldReturnCollectionWhenStudentsWithThisAgeAreInRepository(){
+        Student graindger = new Student(1, "Germiona", 13);
+        Student wizle = new Student(1, "Ron", 12);
+        Collection<Student> expectedResult= List.of(potter,graindger);
+        when(studentsRepository.findByAgeBetween(10,20)).thenReturn(expectedResult);
+        assertEquals(expectedResult,studentService.findByAgeBetween(10,20));
+    }
+    @Test
+    void readStudentFaculty_shouldReturnStudentFaculty(){
+        Faculty grifindor= new Faculty(1L,"Гриффиндор","Зеленый");
+        potter.setFaculty(grifindor);
+        when(studentsRepository.findById(potter.getId())).thenReturn(of(potter));
+        assertEquals(grifindor,studentService.readStudentFaculty(potter.getId()));
+    }
+
+    @Test
+    void readByFacultyId_shouldReturnCollectionOfStudentsWithFaculty(){
+        Student graindger = new Student(1, "Germiona", 13);
+        Student wizle = new Student(1, "Ron", 12);
+        Collection<Student> expectedResult= List.of(potter,graindger);
+        when(studentsRepository.findAllByFaculty_id(1L)).thenReturn(expectedResult);
+        assertEquals(expectedResult,studentService.readByFacultyId(1L));
     }
 }
