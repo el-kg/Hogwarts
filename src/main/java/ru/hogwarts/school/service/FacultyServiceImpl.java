@@ -14,6 +14,7 @@ import java.util.List;
 
 public class FacultyServiceImpl implements FacultyService {
     private final FacultyRepository facultyRepository;
+
     public FacultyServiceImpl(FacultyRepository facultyRepository) {
         this.facultyRepository = facultyRepository;
     }
@@ -27,7 +28,7 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public Faculty read(long id) {
-      return facultyRepository.findById(id).orElseThrow(FacultyNotFoundException::new);
+        return facultyRepository.findById(id).orElseThrow(FacultyNotFoundException::new);
     }
 
     @Override
@@ -38,17 +39,19 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public Faculty delete(long id) {
-        Faculty f =facultyRepository.findById(id).orElseThrow(FacultyNotFoundException::new);
+        Faculty f = facultyRepository.findById(id).orElseThrow(FacultyNotFoundException::new);
         facultyRepository.deleteById(id);
         return f;
     }
 
-   @Override
+    @Override
     public List<Faculty> findByColor(String color) {
         return facultyRepository.findByColor(color);
     }
+
     @Override
-    public Collection<Faculty> findByColorOrName(String name,String color){
-        return facultyRepository.findByNameIgnoreCaseOrColorIgnoreCase(name,color);}
+    public Collection<Faculty> findByColorOrName(String name, String color) {
+        return facultyRepository.findByNameIgnoreCaseOrColorIgnoreCase(name, color);
     }
+}
 

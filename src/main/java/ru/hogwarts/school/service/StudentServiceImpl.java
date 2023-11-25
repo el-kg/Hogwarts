@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Service
 public class StudentServiceImpl implements StudentService {
-    private  final StudentsRepository studentsRepository;
+    private final StudentsRepository studentsRepository;
 
     public StudentServiceImpl(StudentsRepository studentsRepository) {
         this.studentsRepository = studentsRepository;
@@ -49,14 +49,19 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> findByAge(int age) {
         return studentsRepository.findByAge(age);
     }
+
     @Override
-    public Collection<Student> findByAgeBetween(int minAge,int maxAge){
-        return studentsRepository.findByAgeBetween(minAge,maxAge);}
+    public Collection<Student> findByAgeBetween(int minAge, int maxAge) {
+        return studentsRepository.findByAgeBetween(minAge, maxAge);
+    }
+
     @Override
-    public Faculty readStudentFaculty(long studentId){
+    public Faculty readStudentFaculty(long studentId) {
         return read(studentId).getFaculty();
     }
+
     @Override
-    public Collection<Student> readByFacultyId(long facultyId){
-        return studentsRepository.findAllByFaculty_id(facultyId);}
+    public Collection<Student> readByFacultyId(long facultyId) {
+        return studentsRepository.findAllByFaculty_id(facultyId);
+    }
 }

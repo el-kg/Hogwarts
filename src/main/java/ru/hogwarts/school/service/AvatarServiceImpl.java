@@ -9,6 +9,7 @@ import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.repository.AvatarRepository;
 import ru.hogwarts.school.exception.AvatarNotFoundException;
 import ru.hogwarts.school.model.Student;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
