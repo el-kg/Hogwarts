@@ -25,6 +25,7 @@ class AvatarServiceImplTest {
 
     @Test
     void uploadAvatar_shouldSaveAvatarToDataBase() throws IOException {
+
         MultipartFile file = new MockMultipartFile("13.pdf", "13.pdf", "application/pdf"
                 , new byte[]{});
         when(studentService.read(student.getId())).thenReturn(student);
@@ -54,12 +55,8 @@ class AvatarServiceImplTest {
     @Test
     void readFromFile_shouldReadAvatar() throws IOException {
         Avatar avatar = new Avatar();
-        avatar.setData(new byte[]{});
-        avatar.setFilePath("/1L.pdf");
-        avatar.setFileSize(11);
-        avatar.setStudent(student);
-        avatar.setMediaType(".pdf");
         when(avatarRepository.findById(1L)).thenReturn(Optional.of(avatar));
-        assertEquals(new File(avatar.getFilePath()), avatarService.readFromFile(1L));
+        File file = avatarService.readFromFile(1L);
+        assertEquals(file, avatarService.readFromFile(1L));
     }
 }

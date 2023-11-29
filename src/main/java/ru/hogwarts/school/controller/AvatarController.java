@@ -1,6 +1,5 @@
 package ru.hogwarts.school.controller;
-
-
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +23,7 @@ public class AvatarController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  
     public ResponseEntity<String> uploadAvatar(@RequestParam Long studentId, @RequestParam MultipartFile avatar)throws IOException {
                     if (avatar.getSize() > maxFileSizeInB) {
                 return ResponseEntity
@@ -56,4 +56,10 @@ public class AvatarController {
                 .body(Files.readAllBytes(avatar.toPath()));
 
     }
+
+    @GetMapping(value = "/all")
+    public Page<Avatar> getAllAvatars(@RequestParam("page") int page, @RequestParam("size") int size) {
+        return avatarService.getAllAvatars(page, size);
+    }
 }
+

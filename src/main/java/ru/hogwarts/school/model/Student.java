@@ -1,9 +1,9 @@
 package ru.hogwarts.school.model;
 
 
-
 import javax.persistence.*;
 import java.util.Objects;
+
 @Entity
 public class Student {
     @Id
@@ -11,7 +11,6 @@ public class Student {
     private long id;
     private String name;
     private int age;
-
 
 
     @ManyToOne
@@ -23,7 +22,10 @@ public class Student {
         this.name = name;
         this.age = age;
     }
-    public Student(){}
+
+    public Student() {
+    }
+
     public Faculty getFaculty() {
         return faculty;
     }
