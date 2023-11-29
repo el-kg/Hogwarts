@@ -4,11 +4,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.exception.StudentAlreadyExistException;
 import ru.hogwarts.school.exception.StudentNotFoundException;
-import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentsRepository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -27,7 +25,6 @@ public class StudentServiceImpl implements StudentService {
         logger.info("Отработал метод create");
         studentsRepository.findById(student.getId()).orElseThrow(StudentAlreadyExistException::new);
         return studentsRepository.save(student);
-        //return student;
     }
 
     @Override

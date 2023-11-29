@@ -2,28 +2,29 @@ package ru.hogwarts.school.service;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.hogwarts.school.model.Avatar;
-import ru.hogwarts.school.repository.AvatarRepository;
 import ru.hogwarts.school.exception.AvatarNotFoundException;
+import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.model.Student;
-
+import ru.hogwarts.school.repository.AvatarRepository;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Logger;
-
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
-public class AvatarServiceImpl implements AvatarService {
-    private final Logger logger = (Logger) LoggerFactory.getLogger(AvatarServiceImpl.class);
+
+
+@Service
+public class AvatarServiceImpl implements AvatarService{
+   private final Logger logger = (Logger) LoggerFactory.getLogger(AvatarServiceImpl.class);
+
 
     private final String avatarsDir;
     private final StudentService studentService;
     private final AvatarRepository avatarRepository;
+
 
     public AvatarServiceImpl(StudentService studentService, AvatarRepository avatarRepository,
                              @Value("${path.to.avatars.folder}") String avatarsDir) {
@@ -43,6 +44,7 @@ public class AvatarServiceImpl implements AvatarService {
     private void saveToDb(Path filePath, MultipartFile avatarFile, Student student) throws IOException {
         logger.info("Отработал метод saveToDb");
         Avatar avatar = avatarRepository.findByStudent_id(student.getId()).orElse(new Avatar());
+
         avatar.setStudent(student);
         avatar.setFilePath(filePath.toString());
         avatar.setFileSize(avatar.getFileSize());
@@ -98,5 +100,6 @@ public class AvatarServiceImpl implements AvatarService {
         logger.info("Отработал метод getAllAvatars");
         Pageable paging = PageRequest.of(pageNo, pageSize);
         return avatarRepository.findAll(paging);
+
     }
 }

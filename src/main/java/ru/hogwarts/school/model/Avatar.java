@@ -1,6 +1,8 @@
 package ru.hogwarts.school.model;
 
 
+
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -17,9 +19,7 @@ public class Avatar {
     private byte[] data;
     @OneToOne
     private Student student;
-
-    public Avatar() {
-    }
+    public Avatar(){}
 
     public Long getId() {
         return id;

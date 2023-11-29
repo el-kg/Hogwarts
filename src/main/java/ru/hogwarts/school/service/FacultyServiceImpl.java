@@ -8,7 +8,6 @@ import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.repository.FacultyRepository;
 
 
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -61,6 +60,6 @@ public class FacultyServiceImpl implements FacultyService {
     public Collection<Faculty> findByColorOrName(String name, String color) {
         logger.info("Отработал метод findByColorOrName");
         return facultyRepository.findByNameIgnoreCaseOrColorIgnoreCase(name, color);
-    }
+
 }
 

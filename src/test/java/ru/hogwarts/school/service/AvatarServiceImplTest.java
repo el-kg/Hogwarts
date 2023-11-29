@@ -25,8 +25,9 @@ class AvatarServiceImplTest {
 
     @Test
     void uploadAvatar_shouldSaveAvatarToDataBase() throws IOException {
-        MultipartFile file = new MockMultipartFile("13.pdf", "13.pdf", "application/pdf",
-                new byte[]{});
+
+        MultipartFile file = new MockMultipartFile("13.pdf", "13.pdf", "application/pdf"
+                , new byte[]{});
         when(studentService.read(student.getId())).thenReturn(student);
         when(avatarRepository.findByStudent_id(student.getId())).thenReturn(Optional.empty());
 
