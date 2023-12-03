@@ -4,12 +4,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.exception.StudentAlreadyExistException;
 import ru.hogwarts.school.exception.StudentNotFoundException;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentsRepository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -72,4 +75,22 @@ public class StudentServiceImpl implements StudentService {
         logger.info("Отработал метод readByFacultyId");
         return studentsRepository.findAllByFaculty_id(facultyId);
     }
+    @Override
+    public Collection<String> getFilteredByName(){
+        logger.info("Отработал метод getFilteredByName");
+        return studentsRepository.findAll().stream()
+                .map(Student::getName)
+                .map(String::toUpperCase)
+                .filter(s -> s.startsWith("A"))
+                .sorted()
+                .collect(Collectors.toList());
+    }
+    @Override
+    public Double getAllStudentsByAvgAge(){
+        return studentsRepository.findAll().stream()
+                .mapToInt(Student::getAge)
+                .average()
+                .orElse(0);
+    }
+
 }
