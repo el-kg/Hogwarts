@@ -60,14 +60,33 @@ public class StudentController {
     public Collection<Student> readAllByFacultyId(@PathVariable long id) {
         return studentService.readByFacultyId(id);
     }
+
     @GetMapping("/filteredbyname")
-    public ResponseEntity<Collection<String>> getAllStudentsWithName(){
+    public ResponseEntity<Collection<String>> getAllStudentsWithName() {
         Collection<String> students = studentService.getFilteredByName();
-        if(students.isEmpty()){return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
+        if (students.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         return ResponseEntity.ok(students);
     }
+
     @GetMapping("/getallstudentsbyavgage")
-    public Double getAllStudentsByAvgAge(){
+    public Double getAllStudentsByAvgAge() {
         return studentService.getAllStudentsByAvgAge();
+    }
+
+    @GetMapping("/para-thread")
+    public void getNames() throws InterruptedException {
+        studentService.getNames();
+    }
+
+    @GetMapping("/sync-para")
+    public void getNamesSync() throws InterruptedException {
+        studentService.getNamesSync();
+    }
+
+    @GetMapping("wait-edition")
+    public void getNameSync2() throws InterruptedException {
+        studentService.getNamesSync2();
     }
 }

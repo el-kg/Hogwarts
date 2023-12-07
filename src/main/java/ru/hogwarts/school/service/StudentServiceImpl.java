@@ -17,7 +17,8 @@ import java.util.stream.Collectors;
 @Service
 public class StudentServiceImpl implements StudentService {
     private final StudentsRepository studentsRepository;
-    private final Logger logger= (Logger) LoggerFactory.getLogger(AvatarServiceImpl.class);
+    private final Logger logger = (Logger) LoggerFactory.getLogger(AvatarServiceImpl.class);
+    boolean switcher = true;
 
     public StudentServiceImpl(StudentsRepository studentsRepository) {
         this.studentsRepository = studentsRepository;
@@ -75,8 +76,9 @@ public class StudentServiceImpl implements StudentService {
         logger.info("Отработал метод readByFacultyId");
         return studentsRepository.findAllByFaculty_id(facultyId);
     }
+
     @Override
-    public Collection<String> getFilteredByName(){
+    public Collection<String> getFilteredByName() {
         logger.info("Отработал метод getFilteredByName");
         return studentsRepository.findAll().stream()
                 .map(Student::getName)
@@ -85,12 +87,92 @@ public class StudentServiceImpl implements StudentService {
                 .sorted()
                 .collect(Collectors.toList());
     }
+
     @Override
-    public Double getAllStudentsByAvgAge(){
+    public Double getAllStudentsByAvgAge() {
         return studentsRepository.findAll().stream()
                 .mapToInt(Student::getAge)
                 .average()
                 .orElse(0);
     }
+
+    @Override
+    public void getNames() {
+        Thread thread1 = new Thread(() -> {
+            printName(3L);
+            printName(4L);
+        });
+
+        Thread thread2 = new Thread(() -> {
+            printName(5L);
+            printName(6L);
+        });
+
+        thread2.start();
+        thread1.start();
+
+        printName(1L);
+        printName(2L);
+    }
+
+    @Override
+    public void getNamesSync() {
+        Thread thread1 = new Thread(() -> {
+            printNameSync(3L);
+            printNameSync(4L);
+        });
+
+        Thread thread2 = new Thread(() -> {
+            printNameSync(5L);
+            printNameSync(6L);
+        });
+
+        thread1.start();
+        thread2.start();
+
+        printNameSync(1L);
+        printNameSync(2L);
+
+    }
+
+    @Override
+    public void getNamesSync2() {
+
+
+        while (switcher)
+            try {
+                wait();
+            } catch (InterruptedException ex) {
+                ex.getMessage();
+            }
+        printNameSync(3L);
+        printNameSync(4L);
+        switcher = false;
+        notify();
+
+        while (!switcher)
+            try {
+                wait();
+            } catch (InterruptedException ex) {
+                ex.getMessage();
+            }
+        printNameSync(5L);
+        printNameSync(6L);
+
+        printNameSync(1L);
+        printNameSync(2L);
+    }
+
+
+    private void printName(long id) {
+        String name = studentsRepository.findById(id).get().getName();
+        System.out.println(name);
+    }
+
+    private synchronized void printNameSync(long id) {
+        String name = studentsRepository.findById(id).get().getName();
+        System.out.println(name);
+    }
+
 
 }
